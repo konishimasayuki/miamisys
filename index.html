@@ -175,27 +175,30 @@
     gap:12px;
   }
   .sys-card{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:16px;
-    padding:20px 22px;
+    padding:18px 20px;
     background:var(--white);
     border:1px solid var(--line);
     border-radius:12px;
-    text-decoration:none;
     color:var(--ink);
     transition:.15s;
   }
   .sys-card:hover{
     border-color:var(--blue-600);
-    background:var(--blue-50);
-    transform:translateX(2px);
+  }
+  .sys-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding-bottom:14px;
+    margin-bottom:14px;
+    border-bottom:1px dashed var(--line);
   }
   .sys-left{
     display:flex;
     align-items:center;
     gap:16px;
+    min-width:0;
   }
   .sys-icon{
     width:40px;height:40px;
@@ -217,10 +220,76 @@
     margin-top:2px;
     word-break:break-all;
   }
-  .sys-arrow{
-    color:var(--blue-600);
-    font-size:18px;
+  .sys-open{
     flex-shrink:0;
+    text-decoration:none;
+    color:var(--blue-600);
+    font-size:13px;
+    font-weight:700;
+    padding:8px 14px;
+    border-radius:8px;
+    border:1px solid var(--blue-100);
+    background:var(--blue-50);
+    white-space:nowrap;
+    transition:.15s;
+  }
+  .sys-open:hover{
+    background:var(--blue-600);
+    color:#fff;
+    border-color:var(--blue-600);
+  }
+  .sys-creds{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .cred-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--blue-50);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:8px 10px;
+    min-width:0;
+  }
+  .cred-label{
+    font-size:10.5px;
+    font-weight:700;
+    color:var(--blue-700);
+    flex-shrink:0;
+    letter-spacing:.02em;
+  }
+  .cred-value{
+    font-size:12px;
+    font-family:"SFMono-Regular",Consolas,Menlo,monospace;
+    color:var(--ink);
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    flex:1;
+    min-width:0;
+  }
+  .cred-value.empty{
+    color:var(--ink-soft);
+    font-family:inherit;
+    font-style:italic;
+  }
+  .copy-btn{
+    flex-shrink:0;
+    border:none;
+    background:none;
+    color:var(--blue-600);
+    font-size:11px;
+    font-weight:700;
+    cursor:pointer;
+    padding:2px 4px;
+  }
+  .copy-btn:hover{text-decoration:underline;}
+  .copy-btn.copied{color:#1a8a4a;}
+
+  @media(max-width:520px){
+    .sys-creds{grid-template-columns:1fr;}
   }
 
   footer{
@@ -296,29 +365,31 @@
       name: "MIAMIホールディングス株式会社",
       password: "miami0383",
       systems: [
-        { name: "入金管理システム", url: "https://mr-debt-collection.vercel.app" },
-        { name: "RECS注文フォーム(新規発注)", url: "https://recs-order-form.vercel.app" },
-        { name: "カーズリペア保証管理システム", url: "https://guarantor-main.vercel.app/login" },
-        { name: "RECS GPSシステム", url: "https://recs-gps.com/#/admin/login" },
-        { name: "レインフォース", url: "https://www.reinforce.style/login" }
+        { name: "入金管理システム", url: "https://mr-debt-collection.vercel.app", id: "a", pw: "a" },
+        { name: "RECS注文フォーム(新規発注)", url: "https://recs-order-form.vercel.app", id: "", pw: "" },
+        { name: "カーズリペア保証管理システム", url: "https://guarantor-main.vercel.app/login", id: "b", pw: "b" },
+        { name: "RECS GPSシステム", url: "https://recs-gps.com/#/admin/login", id: "super.admin@maiami-prod.local", pw: "SuperAdmin#Prod-MghEKqxnJxrfzBet" }
       ]
     },
     engine: {
       name: "株式会社エンジン",
       password: "miami0383",
       systems: [
-        { name: "カーセラマネジメントシステム", url: "https://engine-payment.vercel.app" },
-        { name: "カーズリペア保証管理システム", url: "https://guarantor-main.vercel.app/login" },
-        { name: "RECS GPSシステム", url: "https://recs-gps.com/#/login" }
+        { name: "カーセラマネジメントシステム", url: "https://engine-payment.vercel.app", id: "", pw: "" },
+        { name: "カーズリペア保証管理システム", url: "https://guarantor-main.vercel.app/login", id: "a", pw: "a" },
+        { name: "RECS GPSシステム", url: "https://recs-gps.com/#/login", id: "info@enjin-motors.com", pw: "Miami@03830383" },
+        { name: "レインフォース", url: "https://www.reinforce.style/login", id: "", pw: "" },
+        { name: "GMS GPS", url: "https://ops.cloud-gms.com/", id: "", pw: "" },
+        { name: "シンフォニー", url: "https://kurumaerabi.com/symphony/?SymphonyLogin", id: "", pw: "" }
       ]
     },
     threeeight: {
       name: "株式会社スリーエイト",
       password: "kcar3333",
       systems: [
-        { name: "カーセラマネジメントシステム", url: "https://engine-payment.vercel.app" },
-        { name: "カーズリペア保証管理システム", url: "https://guarantor-main.vercel.app/login" },
-        { name: "RECS GPSシステム", url: "https://recs-gps.com/#/login" }
+        { name: "カーセラマネジメントシステム", url: "https://engine-payment.vercel.app", id: "", pw: "" },
+        { name: "カーズリペア保証管理システム", url: "https://guarantor-main.vercel.app/login", id: "kcar", pw: "3333" },
+        { name: "RECS GPSシステム", url: "https://recs-gps.com/#/login", id: "threeeight333@gmail.com", pw: "Threeeight@333" }
       ]
     }
   };
@@ -343,29 +414,68 @@
 
     const grid = document.getElementById('sysGrid');
     grid.innerHTML = '';
-    company.systems.forEach(sys => {
-      const a = document.createElement('a');
-      a.href = sys.url;
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-      a.className = 'sys-card';
-      a.innerHTML = `
-        <div class="sys-left">
-          <div class="sys-icon">${sys.name.charAt(0)}</div>
-          <div>
-            <div class="sys-name">${sys.name}</div>
-            <div class="sys-url">${sys.url}</div>
+    company.systems.forEach((sys, idx) => {
+      const card = document.createElement('div');
+      card.className = 'sys-card';
+
+      const idVal = sys.id && sys.id.length ? escapeHtml(sys.id) : '';
+      const pwVal = sys.pw && sys.pw.length ? escapeHtml(sys.pw) : '';
+      const uid = `${idx}`;
+
+      card.innerHTML = `
+        <div class="sys-top">
+          <div class="sys-left">
+            <div class="sys-icon">${escapeHtml(sys.name.charAt(0) || '?')}</div>
+            <div>
+              <div class="sys-name">${escapeHtml(sys.name)}</div>
+              <div class="sys-url">${escapeHtml(sys.url)}</div>
+            </div>
+          </div>
+          <a class="sys-open" href="${escapeHtml(sys.url)}" target="_blank" rel="noopener noreferrer">開く →</a>
+        </div>
+        <div class="sys-creds">
+          <div class="cred-item">
+            <span class="cred-label">ID</span>
+            ${idVal
+              ? `<span class="cred-value" id="cred-id-${uid}">${idVal}</span><button class="copy-btn" onclick="copyCred('cred-id-${uid}', this)">コピー</button>`
+              : `<span class="cred-value empty">未登録</span>`}
+          </div>
+          <div class="cred-item">
+            <span class="cred-label">パスワード</span>
+            ${pwVal
+              ? `<span class="cred-value" id="cred-pw-${uid}">${pwVal}</span><button class="copy-btn" onclick="copyCred('cred-pw-${uid}', this)">コピー</button>`
+              : `<span class="cred-value empty">未登録</span>`}
           </div>
         </div>
-        <div class="sys-arrow">→</div>
       `;
-      grid.appendChild(a);
+      grid.appendChild(card);
     });
 
     document.getElementById('loginView').style.display = 'none';
     document.getElementById('dashView').style.display = 'block';
     document.getElementById('logoutBtn').style.display = 'inline-block';
     document.getElementById('passwordInput').value = '';
+  }
+
+  function escapeHtml(str){
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function copyCred(elId, btn){
+    const text = document.getElementById(elId).textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const original = btn.textContent;
+      btn.textContent = 'コピー済';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.classList.remove('copied');
+      }, 1200);
+    });
   }
 
   function logout(){
