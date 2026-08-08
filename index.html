@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIAMIシステム一括管理</title>
+<style>
+  :root{
+    --blue-900:#0b2f6b;
+    --blue-700:#1450c9;
+    --blue-600:#1a5ff0;
+    --blue-100:#eaf1ff;
+    --blue-50:#f5f8ff;
+    --ink:#132340;
+    --ink-soft:#5a6b8c;
+    --line:#e1e8f7;
+    --white:#ffffff;
+    --danger:#c0392b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:"Hiragino Sans","Yu Gothic",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:var(--white);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ===== header ===== */
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px 32px;
+    border-bottom:1px solid var(--line);
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .brand-mark{
+    width:38px;height:38px;border-radius:10px;
+    background:linear-gradient(135deg,var(--blue-600),var(--blue-900));
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:700;font-size:15px;letter-spacing:.5px;
+    flex-shrink:0;
+  }
+  .brand-text{line-height:1.3;}
+  .brand-text .en{font-size:11px;letter-spacing:.14em;color:var(--blue-600);font-weight:600;}
+  .brand-text .jp{font-size:16px;font-weight:700;color:var(--ink);}
+
+  #logoutBtn{
+    display:none;
+    border:1px solid var(--line);
+    background:var(--white);
+    color:var(--ink-soft);
+    padding:9px 18px;
+    border-radius:8px;
+    font-size:13px;
+    cursor:pointer;
+    transition:.15s;
+  }
+  #logoutBtn:hover{border-color:var(--blue-600);color:var(--blue-700);}
+
+  main{
+    flex:1;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    padding:48px 20px;
+  }
+
+  /* ===== login screen ===== */
+  #loginView{
+    width:100%;
+    max-width:420px;
+    margin-top:40px;
+  }
+  .login-card{
+    background:var(--blue-50);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:40px 36px;
+  }
+  .login-title{
+    font-size:20px;
+    font-weight:700;
+    margin-bottom:6px;
+    color:var(--ink);
+  }
+  .login-sub{
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-bottom:28px;
+  }
+  label{
+    display:block;
+    font-size:12px;
+    font-weight:600;
+    color:var(--blue-700);
+    margin-bottom:8px;
+    letter-spacing:.03em;
+  }
+  .field{margin-bottom:20px;}
+  select, input[type="password"]{
+    width:100%;
+    padding:13px 14px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    font-size:14px;
+    background:var(--white);
+    color:var(--ink);
+    outline:none;
+    transition:.15s;
+  }
+  select:focus, input[type="password"]:focus{
+    border-color:var(--blue-600);
+    box-shadow:0 0 0 3px var(--blue-100);
+  }
+  #loginBtn{
+    width:100%;
+    padding:14px;
+    margin-top:6px;
+    background:var(--blue-600);
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:.02em;
+    cursor:pointer;
+    transition:.15s;
+  }
+  #loginBtn:hover{background:var(--blue-700);}
+  #loginBtn:active{transform:translateY(1px);}
+
+  .error-msg{
+    display:none;
+    margin-top:14px;
+    padding:10px 14px;
+    background:#fdecea;
+    border:1px solid #f6c4bd;
+    color:var(--danger);
+    font-size:12.5px;
+    border-radius:8px;
+  }
+
+  /* ===== dashboard screen ===== */
+  #dashView{
+    display:none;
+    width:100%;
+    max-width:760px;
+  }
+  .dash-head{
+    margin-bottom:28px;
+  }
+  .dash-eyebrow{
+    font-size:12px;
+    font-weight:700;
+    color:var(--blue-600);
+    letter-spacing:.08em;
+    margin-bottom:6px;
+  }
+  .dash-title{
+    font-size:24px;
+    font-weight:700;
+    color:var(--ink);
+  }
+
+  .sys-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+  .sys-card{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:20px 22px;
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:12px;
+    text-decoration:none;
+    color:var(--ink);
+    transition:.15s;
+  }
+  .sys-card:hover{
+    border-color:var(--blue-600);
+    background:var(--blue-50);
+    transform:translateX(2px);
+  }
+  .sys-left{
+    display:flex;
+    align-items:center;
+    gap:16px;
+  }
+  .sys-icon{
+    width:40px;height:40px;
+    border-radius:9px;
+    background:var(--blue-100);
+    color:var(--blue-700);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;
+    font-size:14px;
+    flex-shrink:0;
+  }
+  .sys-name{
+    font-size:14.5px;
+    font-weight:600;
+  }
+  .sys-url{
+    font-size:11.5px;
+    color:var(--ink-soft);
+    margin-top:2px;
+    word-break:break-all;
+  }
+  .sys-arrow{
+    color:var(--blue-600);
+    font-size:18px;
+    flex-shrink:0;
+  }
+
+  footer{
+    text-align:center;
+    padding:20px;
+    font-size:11px;
+    color:var(--ink-soft);
+  }
+
+  @media(max-width:480px){
+    header{padding:16px 18px;}
+    .login-card{padding:30px 22px;}
+    .sys-card{padding:16px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-mark">M</div>
+    <div class="brand-text">
+      <div class="en">SYSTEM PORTAL</div>
+      <div class="jp">MIAMIシステム一括管理</div>
+    </div>
+  </div>
+  <button id="logoutBtn" onclick="logout()">ログアウト</button>
+</header>
+
+<main>
+
+  <!-- ログイン画面 -->
+  <div id="loginView">
+    <div class="login-card">
+      <div class="login-title">会社を選択してログイン</div>
+      <div class="login-sub">利用する会社を選び、パスワードを入力してください。</div>
+
+      <div class="field">
+        <label for="companySelect">会社名</label>
+        <select id="companySelect">
+          <option value="miami">MIAMIホールディングス株式会社</option>
+          <option value="engine">株式会社エンジン</option>
+          <option value="threeeight">株式会社スリーエイト</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="passwordInput">パスワード</label>
+        <input type="password" id="passwordInput" placeholder="パスワードを入力" onkeydown="if(event.key==='Enter')login()">
+      </div>
+
+      <button id="loginBtn" onclick="login()">ログイン</button>
+      <div class="error-msg" id="errorMsg">パスワードが正しくありません。</div>
+    </div>
+  </div>
+
+  <!-- ダッシュボード画面 -->
+  <div id="dashView">
+    <div class="dash-head">
+      <div class="dash-eyebrow">SYSTEMS</div>
+      <div class="dash-title" id="dashCompanyName">会社名</div>
+    </div>
+    <div class="sys-grid" id="sysGrid"></div>
+  </div>
+
+</main>
+
+<footer>MIAMIシステム一括管理</footer>
+
+<script>
+  const COMPANIES = {
+    miami: {
+      name: "MIAMIホールディングス株式会社",
+      password: "miami0383",
+      systems: [
+        { name: "入金管理システム", url: "https://mr-debt-collection.vercel.app" },
+        { name: "RECS注文フォーム(新規発注)", url: "https://recs-order-form.vercel.app" },
+        { name: "カーズリペア保証管理システム", url: "https://guarantor-main.vercel.app/login" },
+        { name: "RECS GPSシステム", url: "https://recs-gps.com/#/admin/login" },
+        { name: "レインフォース", url: "https://www.reinforce.style/login" }
+      ]
+    },
+    engine: {
+      name: "株式会社エンジン",
+      password: "miami0383",
+      systems: [
+        { name: "カーセラマネジメントシステム", url: "https://engine-payment.vercel.app" },
+        { name: "カーズリペア保証管理システム", url: "https://guarantor-main.vercel.app/login" },
+        { name: "RECS GPSシステム", url: "https://recs-gps.com/#/login" }
+      ]
+    },
+    threeeight: {
+      name: "株式会社スリーエイト",
+      password: "kcar3333",
+      systems: [
+        { name: "カーセラマネジメントシステム", url: "https://engine-payment.vercel.app" },
+        { name: "カーズリペア保証管理システム", url: "https://guarantor-main.vercel.app/login" },
+        { name: "RECS GPSシステム", url: "https://recs-gps.com/#/login" }
+      ]
+    }
+  };
+
+  function login(){
+    const key = document.getElementById('companySelect').value;
+    const pass = document.getElementById('passwordInput').value;
+    const company = COMPANIES[key];
+    const errorMsg = document.getElementById('errorMsg');
+
+    if(pass === company.password){
+      errorMsg.style.display = 'none';
+      renderDashboard(key);
+    } else {
+      errorMsg.style.display = 'block';
+    }
+  }
+
+  function renderDashboard(key){
+    const company = COMPANIES[key];
+    document.getElementById('dashCompanyName').textContent = company.name;
+
+    const grid = document.getElementById('sysGrid');
+    grid.innerHTML = '';
+    company.systems.forEach(sys => {
+      const a = document.createElement('a');
+      a.href = sys.url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.className = 'sys-card';
+      a.innerHTML = `
+        <div class="sys-left">
+          <div class="sys-icon">${sys.name.charAt(0)}</div>
+          <div>
+            <div class="sys-name">${sys.name}</div>
+            <div class="sys-url">${sys.url}</div>
+          </div>
+        </div>
+        <div class="sys-arrow">→</div>
+      `;
+      grid.appendChild(a);
+    });
+
+    document.getElementById('loginView').style.display = 'none';
+    document.getElementById('dashView').style.display = 'block';
+    document.getElementById('logoutBtn').style.display = 'inline-block';
+    document.getElementById('passwordInput').value = '';
+  }
+
+  function logout(){
+    document.getElementById('dashView').style.display = 'none';
+    document.getElementById('loginView').style.display = 'block';
+    document.getElementById('logoutBtn').style.display = 'none';
+    document.getElementById('errorMsg').style.display = 'none';
+  }
+</script>
+
+</body>
+</html>
