@@ -469,7 +469,7 @@
     <div class="sys-grid" id="sysGrid"></div>
 
     <div class="save-bar" id="saveBar">
-      <span>未保存の変更があります</span>
+      <span>保存すると編集モードを終了します</span>
       <button class="save-bar-btn" onclick="saveAll()">変更を保存</button>
     </div>
   </div>
@@ -554,10 +554,9 @@
     document.getElementById('loginView').style.display = 'none';
     document.getElementById('dashView').style.display = 'block';
     document.getElementById('logoutBtn').style.display = 'inline-block';
-    document.getElementById('editToggleBtn').style.display = 'inline-block';
-    document.getElementById('editToggleBtn').textContent = EDIT_MODE ? '編集を終了' : '編集する';
-    document.getElementById('editToggleBtn').classList.toggle('active', EDIT_MODE);
-    document.getElementById('saveBar').style.display = (EDIT_MODE && DIRTY) ? 'flex' : 'none';
+    document.getElementById('editToggleBtn').style.display = EDIT_MODE ? 'none' : 'inline-block';
+    document.getElementById('editToggleBtn').textContent = '編集する';
+    document.getElementById('saveBar').style.display = EDIT_MODE ? 'flex' : 'none';
     document.getElementById('passwordInput').value = '';
   }
 
@@ -646,7 +645,7 @@
   }
 
   function toggleEditMode(){
-    EDIT_MODE = !EDIT_MODE;
+    EDIT_MODE = true;
     renderDashboard();
   }
 
@@ -663,8 +662,9 @@
         return;
       }
       DIRTY = false;
-      document.getElementById('saveBar').style.display = 'none';
+      EDIT_MODE = false;
       showToast('保存しました');
+      renderDashboard();
     }catch(e){
       showToast('通信エラーが発生しました');
     }
