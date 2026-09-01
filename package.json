@@ -1,0 +1,6 @@
+{
+  "name": "miami-system-portal",
+  "version": "2.0.0",
+  "private": true,
+  "description": "MIAMIシステム一括管理ポータル（静的フロント + Vercel Functions + Upstash Redis）"
+}

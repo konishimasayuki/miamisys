@@ -16,6 +16,7 @@
     --line:#e1e8f7;
     --white:#ffffff;
     --danger:#c0392b;
+    --green:#1a8a4a;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{
@@ -51,7 +52,9 @@
   .brand-text .en{font-size:11px;letter-spacing:.14em;color:var(--blue-600);font-weight:600;}
   .brand-text .jp{font-size:16px;font-weight:700;color:var(--ink);}
 
-  #logoutBtn{
+  .header-actions{display:flex;align-items:center;gap:10px;}
+
+  .btn-ghost{
     display:none;
     border:1px solid var(--line);
     background:var(--white);
@@ -62,7 +65,12 @@
     cursor:pointer;
     transition:.15s;
   }
-  #logoutBtn:hover{border-color:var(--blue-600);color:var(--blue-700);}
+  .btn-ghost:hover{border-color:var(--blue-600);color:var(--blue-700);}
+  .btn-ghost.active{
+    background:var(--blue-600);
+    color:#fff;
+    border-color:var(--blue-600);
+  }
 
   main{
     flex:1;
@@ -72,8 +80,16 @@
     padding:48px 20px;
   }
 
+  /* ===== loading ===== */
+  #loadingView{
+    margin-top:80px;
+    color:var(--ink-soft);
+    font-size:13px;
+  }
+
   /* ===== login screen ===== */
   #loginView{
+    display:none;
     width:100%;
     max-width:420px;
     margin-top:40px;
@@ -104,7 +120,7 @@
     letter-spacing:.03em;
   }
   .field{margin-bottom:20px;}
-  select, input[type="password"]{
+  select, input[type="password"], input[type="text"]{
     width:100%;
     padding:13px 14px;
     border:1px solid var(--line);
@@ -114,8 +130,9 @@
     color:var(--ink);
     outline:none;
     transition:.15s;
+    font-family:inherit;
   }
-  select:focus, input[type="password"]:focus{
+  select:focus, input:focus{
     border-color:var(--blue-600);
     box-shadow:0 0 0 3px var(--blue-100);
   }
@@ -154,7 +171,12 @@
     max-width:760px;
   }
   .dash-head{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
     margin-bottom:28px;
+    gap:16px;
+    flex-wrap:wrap;
   }
   .dash-eyebrow{
     font-size:12px;
@@ -182,9 +204,9 @@
     color:var(--ink);
     transition:.15s;
   }
-  .sys-card:hover{
-    border-color:var(--blue-600);
-  }
+  .sys-card:hover{border-color:var(--blue-600);}
+  .sys-card.editing{border-color:var(--blue-600);background:var(--blue-50);}
+
   .sys-top{
     display:flex;
     align-items:center;
@@ -199,6 +221,7 @@
     align-items:center;
     gap:16px;
     min-width:0;
+    flex:1;
   }
   .sys-icon{
     width:40px;height:40px;
@@ -210,10 +233,7 @@
     font-size:14px;
     flex-shrink:0;
   }
-  .sys-name{
-    font-size:14.5px;
-    font-weight:600;
-  }
+  .sys-name{font-size:14.5px;font-weight:600;}
   .sys-url{
     font-size:11.5px;
     color:var(--ink-soft);
@@ -233,11 +253,23 @@
     white-space:nowrap;
     transition:.15s;
   }
-  .sys-open:hover{
-    background:var(--blue-600);
-    color:#fff;
-    border-color:var(--blue-600);
+  .sys-open:hover{background:var(--blue-600);color:#fff;border-color:var(--blue-600);}
+
+  .sys-actions{display:flex;gap:8px;flex-shrink:0;}
+  .icon-btn{
+    border:1px solid var(--line);
+    background:var(--white);
+    color:var(--ink-soft);
+    font-size:12px;
+    padding:7px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:.15s;
+    white-space:nowrap;
   }
+  .icon-btn:hover{border-color:var(--blue-600);color:var(--blue-700);}
+  .icon-btn.danger:hover{border-color:var(--danger);color:var(--danger);}
+
   .sys-creds{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -270,11 +302,7 @@
     flex:1;
     min-width:0;
   }
-  .cred-value.empty{
-    color:var(--ink-soft);
-    font-family:inherit;
-    font-style:italic;
-  }
+  .cred-value.empty{color:var(--ink-soft);font-family:inherit;font-style:italic;}
   .copy-btn{
     flex-shrink:0;
     border:none;
@@ -286,11 +314,92 @@
     padding:2px 4px;
   }
   .copy-btn:hover{text-decoration:underline;}
-  .copy-btn.copied{color:#1a8a4a;}
+  .copy-btn.copied{color:var(--green);}
 
-  @media(max-width:520px){
-    .sys-creds{grid-template-columns:1fr;}
+  /* edit-mode inputs */
+  .edit-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
   }
+  .edit-field{grid-column:span 2;}
+  .edit-field.half{grid-column:span 1;}
+  .edit-field label{
+    font-size:10.5px;
+    margin-bottom:4px;
+    color:var(--blue-700);
+  }
+  .edit-field input{
+    padding:9px 10px;
+    font-size:13px;
+    border-radius:7px;
+  }
+  .edit-footer{
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+    margin-top:14px;
+  }
+
+  .add-card{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:18px;
+    border:1.5px dashed var(--blue-600);
+    border-radius:12px;
+    color:var(--blue-600);
+    font-size:13.5px;
+    font-weight:700;
+    cursor:pointer;
+    background:var(--blue-50);
+    transition:.15s;
+  }
+  .add-card:hover{background:var(--blue-100);}
+
+  .save-bar{
+    display:none;
+    position:sticky;
+    bottom:20px;
+    margin-top:20px;
+    padding:14px 18px;
+    background:var(--blue-900);
+    color:#fff;
+    border-radius:12px;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    box-shadow:0 8px 24px rgba(11,47,107,.25);
+  }
+  .save-bar span{font-size:12.5px;}
+  .save-bar-btn{
+    background:#fff;
+    color:var(--blue-900);
+    border:none;
+    padding:9px 18px;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+  }
+
+  .toast{
+    position:fixed;
+    bottom:24px;
+    left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:var(--ink);
+    color:#fff;
+    padding:12px 22px;
+    border-radius:10px;
+    font-size:13px;
+    opacity:0;
+    pointer-events:none;
+    transition:.25s;
+    z-index:50;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
   footer{
     text-align:center;
@@ -299,10 +408,12 @@
     color:var(--ink-soft);
   }
 
-  @media(max-width:480px){
+  @media(max-width:520px){
     header{padding:16px 18px;}
     .login-card{padding:30px 22px;}
     .sys-card{padding:16px;}
+    .sys-creds{grid-template-columns:1fr;}
+    .edit-field.half{grid-column:span 2;}
   }
 </style>
 </head>
@@ -316,10 +427,15 @@
       <div class="jp">MIAMIシステム一括管理</div>
     </div>
   </div>
-  <button id="logoutBtn" onclick="logout()">ログアウト</button>
+  <div class="header-actions">
+    <button class="btn-ghost" id="editToggleBtn" onclick="toggleEditMode()">編集する</button>
+    <button class="btn-ghost" id="logoutBtn" onclick="logout()">ログアウト</button>
+  </div>
 </header>
 
 <main>
+
+  <div id="loadingView">読み込み中...</div>
 
   <!-- ログイン画面 -->
   <div id="loginView">
@@ -329,11 +445,7 @@
 
       <div class="field">
         <label for="companySelect">会社名</label>
-        <select id="companySelect">
-          <option value="miami">MIAMIホールディングス株式会社</option>
-          <option value="engine">株式会社エンジン</option>
-          <option value="threeeight">株式会社スリーエイト</option>
-        </select>
+        <select id="companySelect"></select>
       </div>
 
       <div class="field">
@@ -349,112 +461,67 @@
   <!-- ダッシュボード画面 -->
   <div id="dashView">
     <div class="dash-head">
-      <div class="dash-eyebrow">SYSTEMS</div>
-      <div class="dash-title" id="dashCompanyName">会社名</div>
+      <div>
+        <div class="dash-eyebrow">SYSTEMS</div>
+        <div class="dash-title" id="dashCompanyName">会社名</div>
+      </div>
     </div>
     <div class="sys-grid" id="sysGrid"></div>
+
+    <div class="save-bar" id="saveBar">
+      <span>未保存の変更があります</span>
+      <button class="save-bar-btn" onclick="saveAll()">変更を保存</button>
+    </div>
   </div>
 
 </main>
 
 <footer>MIAMIシステム一括管理</footer>
+<div class="toast" id="toast"></div>
 
 <script>
-  const COMPANIES = {
-    miami: {
-      name: "MIAMIホールディングス株式会社",
-      password: "miami0383",
-      systems: [
-        { name: "入金管理システム", url: "https://mr-debt-collection.vercel.app", id: "a", pw: "a" },
-        { name: "RECS注文フォーム(新規発注)", url: "https://recs-order-form.vercel.app", id: "", pw: "" },
-        { name: "カーズリペア保証管理システム", url: "https://guarantor-main.vercel.app/login", id: "b", pw: "b" },
-        { name: "RECS GPSシステム", url: "https://recs-gps.com/#/admin/login", id: "super.admin@maiami-prod.local", pw: "SuperAdmin#Prod-MghEKqxnJxrfzBet" }
-      ]
-    },
-    engine: {
-      name: "株式会社エンジン",
-      password: "miami0383",
-      systems: [
-        { name: "カーセラマネジメントシステム", url: "https://engine-payment.vercel.app", id: "", pw: "" },
-        { name: "カーズリペア保証管理システム", url: "https://guarantor-main.vercel.app/login", id: "a", pw: "a" },
-        { name: "RECS GPSシステム", url: "https://recs-gps.com/#/login", id: "info@enjin-motors.com", pw: "Miami@03830383" },
-        { name: "レインフォース", url: "https://www.reinforce.style/login", id: "", pw: "" },
-        { name: "GMS GPS", url: "https://ops.cloud-gms.com/", id: "", pw: "" },
-        { name: "シンフォニー", url: "https://kurumaerabi.com/symphony/?SymphonyLogin", id: "", pw: "" }
-      ]
-    },
-    threeeight: {
-      name: "株式会社スリーエイト",
-      password: "kcar3333",
-      systems: [
-        { name: "カーセラマネジメントシステム", url: "https://engine-payment.vercel.app", id: "", pw: "" },
-        { name: "カーズリペア保証管理システム", url: "https://guarantor-main.vercel.app/login", id: "kcar", pw: "3333" },
-        { name: "RECS GPSシステム", url: "https://recs-gps.com/#/login", id: "threeeight333@gmail.com", pw: "Threeeight@333" }
-      ]
+  let DATA = null;
+  let CURRENT_KEY = null;
+  let EDIT_MODE = false;
+  let DIRTY = false;
+
+  async function init(){
+    try{
+      const res = await fetch('/api/data');
+      DATA = await res.json();
+      if(!res.ok){
+        showToast(DATA.error || 'データの読み込みに失敗しました');
+        return;
+      }
+      const select = document.getElementById('companySelect');
+      select.innerHTML = '';
+      Object.keys(DATA).forEach(key => {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = DATA[key].name;
+        select.appendChild(opt);
+      });
+      document.getElementById('loadingView').style.display = 'none';
+      document.getElementById('loginView').style.display = 'block';
+    }catch(e){
+      document.getElementById('loadingView').textContent = '通信エラーが発生しました。時間をおいて再度お試しください。';
     }
-  };
+  }
 
   function login(){
     const key = document.getElementById('companySelect').value;
     const pass = document.getElementById('passwordInput').value;
-    const company = COMPANIES[key];
+    const company = DATA[key];
     const errorMsg = document.getElementById('errorMsg');
 
     if(pass === company.password){
       errorMsg.style.display = 'none';
-      renderDashboard(key);
+      CURRENT_KEY = key;
+      EDIT_MODE = false;
+      renderDashboard();
     } else {
       errorMsg.style.display = 'block';
     }
-  }
-
-  function renderDashboard(key){
-    const company = COMPANIES[key];
-    document.getElementById('dashCompanyName').textContent = company.name;
-
-    const grid = document.getElementById('sysGrid');
-    grid.innerHTML = '';
-    company.systems.forEach((sys, idx) => {
-      const card = document.createElement('div');
-      card.className = 'sys-card';
-
-      const idVal = sys.id && sys.id.length ? escapeHtml(sys.id) : '';
-      const pwVal = sys.pw && sys.pw.length ? escapeHtml(sys.pw) : '';
-      const uid = `${idx}`;
-
-      card.innerHTML = `
-        <div class="sys-top">
-          <div class="sys-left">
-            <div class="sys-icon">${escapeHtml(sys.name.charAt(0) || '?')}</div>
-            <div>
-              <div class="sys-name">${escapeHtml(sys.name)}</div>
-              <div class="sys-url">${escapeHtml(sys.url)}</div>
-            </div>
-          </div>
-          <a class="sys-open" href="${escapeHtml(sys.url)}" target="_blank" rel="noopener noreferrer">開く →</a>
-        </div>
-        <div class="sys-creds">
-          <div class="cred-item">
-            <span class="cred-label">ID</span>
-            ${idVal
-              ? `<span class="cred-value" id="cred-id-${uid}">${idVal}</span><button class="copy-btn" onclick="copyCred('cred-id-${uid}', this)">コピー</button>`
-              : `<span class="cred-value empty">未登録</span>`}
-          </div>
-          <div class="cred-item">
-            <span class="cred-label">パスワード</span>
-            ${pwVal
-              ? `<span class="cred-value" id="cred-pw-${uid}">${pwVal}</span><button class="copy-btn" onclick="copyCred('cred-pw-${uid}', this)">コピー</button>`
-              : `<span class="cred-value empty">未登録</span>`}
-          </div>
-        </div>
-      `;
-      grid.appendChild(card);
-    });
-
-    document.getElementById('loginView').style.display = 'none';
-    document.getElementById('dashView').style.display = 'block';
-    document.getElementById('logoutBtn').style.display = 'inline-block';
-    document.getElementById('passwordInput').value = '';
   }
 
   function escapeHtml(str){
@@ -463,6 +530,144 @@
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
+  }
+
+  function renderDashboard(){
+    const company = DATA[CURRENT_KEY];
+    document.getElementById('dashCompanyName').textContent = company.name;
+
+    const grid = document.getElementById('sysGrid');
+    grid.innerHTML = '';
+
+    company.systems.forEach((sys, idx) => {
+      grid.appendChild(EDIT_MODE ? renderEditCard(sys, idx) : renderViewCard(sys, idx));
+    });
+
+    if(EDIT_MODE){
+      const addCard = document.createElement('div');
+      addCard.className = 'add-card';
+      addCard.textContent = '＋ 新しいシステムを追加';
+      addCard.onclick = addSystem;
+      grid.appendChild(addCard);
+    }
+
+    document.getElementById('loginView').style.display = 'none';
+    document.getElementById('dashView').style.display = 'block';
+    document.getElementById('logoutBtn').style.display = 'inline-block';
+    document.getElementById('editToggleBtn').style.display = 'inline-block';
+    document.getElementById('editToggleBtn').textContent = EDIT_MODE ? '編集を終了' : '編集する';
+    document.getElementById('editToggleBtn').classList.toggle('active', EDIT_MODE);
+    document.getElementById('saveBar').style.display = (EDIT_MODE && DIRTY) ? 'flex' : 'none';
+    document.getElementById('passwordInput').value = '';
+  }
+
+  function renderViewCard(sys, idx){
+    const card = document.createElement('div');
+    card.className = 'sys-card';
+    const idVal = sys.id && sys.id.length ? escapeHtml(sys.id) : '';
+    const pwVal = sys.pw && sys.pw.length ? escapeHtml(sys.pw) : '';
+    const uid = `${idx}`;
+
+    card.innerHTML = `
+      <div class="sys-top">
+        <div class="sys-left">
+          <div class="sys-icon">${escapeHtml(sys.name.charAt(0) || '?')}</div>
+          <div>
+            <div class="sys-name">${escapeHtml(sys.name || '(名称未設定)')}</div>
+            <div class="sys-url">${escapeHtml(sys.url || '(URL未設定)')}</div>
+          </div>
+        </div>
+        ${sys.url ? `<a class="sys-open" href="${escapeHtml(sys.url)}" target="_blank" rel="noopener noreferrer">開く →</a>` : ''}
+      </div>
+      <div class="sys-creds">
+        <div class="cred-item">
+          <span class="cred-label">ID</span>
+          ${idVal
+            ? `<span class="cred-value" id="cred-id-${uid}">${idVal}</span><button class="copy-btn" onclick="copyCred('cred-id-${uid}', this)">コピー</button>`
+            : `<span class="cred-value empty">未登録</span>`}
+        </div>
+        <div class="cred-item">
+          <span class="cred-label">パスワード</span>
+          ${pwVal
+            ? `<span class="cred-value" id="cred-pw-${uid}">${pwVal}</span><button class="copy-btn" onclick="copyCred('cred-pw-${uid}', this)">コピー</button>`
+            : `<span class="cred-value empty">未登録</span>`}
+        </div>
+      </div>
+    `;
+    return card;
+  }
+
+  function renderEditCard(sys, idx){
+    const card = document.createElement('div');
+    card.className = 'sys-card editing';
+    card.innerHTML = `
+      <div class="edit-grid">
+        <div class="edit-field">
+          <label>システム名</label>
+          <input type="text" value="${escapeHtml(sys.name)}" oninput="updateField(${idx},'name',this.value)">
+        </div>
+        <div class="edit-field">
+          <label>URL</label>
+          <input type="text" value="${escapeHtml(sys.url)}" oninput="updateField(${idx},'url',this.value)">
+        </div>
+        <div class="edit-field half">
+          <label>ID</label>
+          <input type="text" value="${escapeHtml(sys.id)}" oninput="updateField(${idx},'id',this.value)">
+        </div>
+        <div class="edit-field half">
+          <label>パスワード</label>
+          <input type="text" value="${escapeHtml(sys.pw)}" oninput="updateField(${idx},'pw',this.value)">
+        </div>
+      </div>
+      <div class="edit-footer">
+        <button class="icon-btn danger" onclick="removeSystem(${idx})">このシステムを削除</button>
+      </div>
+    `;
+    return card;
+  }
+
+  function updateField(idx, field, value){
+    DATA[CURRENT_KEY].systems[idx][field] = value;
+    DIRTY = true;
+    document.getElementById('saveBar').style.display = 'flex';
+  }
+
+  function addSystem(){
+    DATA[CURRENT_KEY].systems.push({ name: '', url: '', id: '', pw: '' });
+    DIRTY = true;
+    renderDashboard();
+  }
+
+  function removeSystem(idx){
+    if(!confirm('このシステムを削除します。よろしいですか？')) return;
+    DATA[CURRENT_KEY].systems.splice(idx, 1);
+    DIRTY = true;
+    renderDashboard();
+  }
+
+  function toggleEditMode(){
+    EDIT_MODE = !EDIT_MODE;
+    renderDashboard();
+  }
+
+  async function saveAll(){
+    try{
+      const res = await fetch('/api/data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(DATA)
+      });
+      const json = await res.json();
+      if(!res.ok){
+        showToast(json.error || '保存に失敗しました');
+        return;
+      }
+      DIRTY = false;
+      document.getElementById('saveBar').style.display = 'none';
+      showToast('保存しました');
+    }catch(e){
+      showToast('通信エラーが発生しました');
+    }
   }
 
   function copyCred(elId, btn){
@@ -478,12 +683,28 @@
     });
   }
 
+  function showToast(msg){
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+
   function logout(){
+    if(EDIT_MODE && DIRTY){
+      if(!confirm('未保存の変更があります。保存せずにログアウトしますか？')) return;
+    }
+    CURRENT_KEY = null;
+    EDIT_MODE = false;
+    DIRTY = false;
     document.getElementById('dashView').style.display = 'none';
     document.getElementById('loginView').style.display = 'block';
     document.getElementById('logoutBtn').style.display = 'none';
+    document.getElementById('editToggleBtn').style.display = 'none';
     document.getElementById('errorMsg').style.display = 'none';
   }
+
+  init();
 </script>
 
 </body>
